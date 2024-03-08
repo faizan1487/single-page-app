@@ -1,33 +1,31 @@
 <template>
     <nav 
-    :class="[`navbar-${theme}`, `bg-${theme}`, 'navbar', 'navbar-expand-lg']">
+        :class="[`navbar-${theme}`, `bg-${theme}`, 'navbar', 'navbar-expand-lg']"
+    >
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">My site</a>
+            <a class="navbar-brand" href="#">My Vue</a>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li v-for="(page,index) in pages" class="nav-item" :key="index">
+                <li v-for="(page, index) in publishedPages" class="nav-item" :key="index">
                     <navbar-link
                         :page="page"
-                        :isActive="activePage == index"
+                        :isActive="activePage === index"
                         @click.prevent="navLinkClick(index)"
                     ></navbar-link>
                 </li>
             </ul>
             <form class="d-flex">
-                <button
+                <button 
                     class="btn btn-primary"
                     @click.prevent="changeTheme()"
-                >
-                Toggle
-                </button>
+                >Toggle</button>
             </form>
         </div>
     </nav>
 </template>
 
-
-
 <script>
-import NavbarLink from './NavbarLink'
+import NavbarLink from './NavbarLink.vue';
+
 export default {
     components: {
         NavbarLink
@@ -35,11 +33,15 @@ export default {
     created() {
         this.getThemeSetting();
     },
+    computed: {
+        publishedPages() {
+            return this.pages.filter(p => p.published);
+        }
+    },
     props: ['pages', 'activePage', 'navLinkClick'],
-
-    data () {
+    data() {
         return {
-            theme: 'dark',
+            theme: 'light',
         }
     },
     methods: {
@@ -51,12 +53,12 @@ export default {
             }
 
             this.theme = theme;
-            this.storeThemeSetting()
+            this.storeThemeSetting();
         },
-        storeThemeSetting(){
+        storeThemeSetting() {
             localStorage.setItem('theme', this.theme);
         },
-        getThemeSetting(){
+        getThemeSetting() {
             let theme = localStorage.getItem('theme');
 
             if (theme) {
